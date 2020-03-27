@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="c7750ff1-c1bc-47d9-8858-6b956887b92a" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+        <option value="Setup Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../ToModifyPdb" />
+  </component>
+  <component name="JupyterTrust" id="249342cb-bf91-408b-b773-6e70c8f14f07" />
+  <component name="ProjectId" id="1YV4E4HkDN3hmyzvepsapxKnfh1" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Angular Template" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/../../covid/xxx" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="analysis" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="nucleosome" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/packx/scriptsx" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/packx/scriptsx/analysis.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c7750ff1-c1bc-47d9-8858-6b956887b92a" name="Default Changelist" comment="" />
+      <created>1583219962480</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1583219962480</updated>
+      <workItem from="1583219964955" duration="16531000" />
+      <workItem from="1583262024661" duration="7062000" />
+      <workItem from="1583306035573" duration="2331000" />
+      <workItem from="1583311100266" duration="8398000" />
+      <workItem from="1583355548426" duration="109000" />
+      <workItem from="1583394554305" duration="4081000" />
+      <workItem from="1583708693418" duration="105000" />
+      <workItem from="1583709284459" duration="1976000" />
+      <workItem from="1583778993422" duration="748000" />
+      <workItem from="1583828039624" duration="350000" />
+      <workItem from="1583929850149" duration="3863000" />
+      <workItem from="1583939176264" duration="407000" />
+      <workItem from="1584001779688" duration="4551000" />
+      <workItem from="1584314002329" duration="285000" />
+      <workItem from="1584800272082" duration="80830000" />
+      <workItem from="1585136439678" duration="15547000" />
+      <workItem from="1585206015958" duration="353000" />
+      <workItem from="1585219426199" duration="2251000" />
+      <workItem from="1585236304007" duration="577000" />
+      <workItem from="1585236898658" duration="24065000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="461" y="172" key="#Deployment" timestamp="1583938167728">
+      <screen x="0" y="23" width="1680" height="977" />
+    </state>
+    <state x="461" y="172" key="#Deployment/0.23.1680.977/1680.23.1920.1177@0.23.1680.977" timestamp="1583938167728" />
+    <state x="325" y="168" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1585236883692">
+      <screen x="0" y="23" width="1680" height="977" />
+    </state>
+    <state x="325" y="168" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1680.977/-144.-1057.1920.1057@0.23.1680.977" timestamp="1585236883692" />
+    <state x="325" y="168" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1680.977@0.23.1680.977" timestamp="1583220598287" />
+    <state x="539" y="342" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1585268455732">
+      <screen x="0" y="23" width="1680" height="977" />
+    </state>
+    <state x="539" y="342" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1680.977/-144.-1057.1920.1057@0.23.1680.977" timestamp="1585268455732" />
+    <state x="602" y="350" key="#com.intellij.ide.actions.ChooseComponentsToExportDialog" timestamp="1583936795848">
+      <screen x="0" y="23" width="1680" height="977" />
+    </state>
+    <state x="602" y="350" key="#com.intellij.ide.actions.ChooseComponentsToExportDialog/0.23.1680.977/1680.23.1920.1177@0.23.1680.977" timestamp="1583936795848" />
+    <state x="556" y="132" key="#functionsx" timestamp="1583220616958">
+      <screen x="0" y="23" width="1680" height="977" />
+    </state>
+    <state x="556" y="132" key="#functionsx/0.23.1680.977@0.23.1680.977" timestamp="1583220616958" />
+    <state x="-130" y="-915" key="SettingsEditor" timestamp="1584930686634">
+      <screen x="-144" y="-1057" width="1920" height="1057" />
+    </state>
+    <state x="-130" y="-915" key="SettingsEditor/0.23.1680.977/-144.-1057.1920.1057@0.23.1680.977" timestamp="1584930686634" />
+    <state x="362" y="145" key="SettingsEditor/0.23.1680.977/1680.23.1920.1177@0.23.1680.977" timestamp="1584006023104" />
+    <state x="538" y="339" key="com.intellij.ide.util.TipDialog" timestamp="1585236898644">
+      <screen x="0" y="23" width="1680" height="977" />
+    </state>
+    <state x="538" y="339" key="com.intellij.ide.util.TipDialog/0.23.1680.977/-144.-1057.1920.1057@0.23.1680.977" timestamp="1585236898644" />
+    <state x="538" y="339" key="com.intellij.ide.util.TipDialog/0.23.1680.977/1680.23.1920.1177@0.23.1680.977" timestamp="1584001779638" />
+    <state x="538" y="339" key="com.intellij.ide.util.TipDialog/0.23.1680.977@0.23.1680.977" timestamp="1584800271916" />
+    <state x="483" y="270" width="670" height="676" key="search.everywhere.popup" timestamp="1585245222567">
+      <screen x="0" y="23" width="1680" height="977" />
+    </state>
+    <state x="483" y="270" width="670" height="676" key="search.everywhere.popup/0.23.1680.977/-144.-1057.1920.1057@0.23.1680.977" timestamp="1585245222567" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/packx/scriptsx/xx.py</url>
+          <line>446</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../../PackThemAll/makedir_folders/scripts/graph_dist_hist.py</url>
+          <line>266</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

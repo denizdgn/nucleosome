@@ -1,0 +1,142 @@
+#!/usr/bin/env python
+import sys
+import click
+import glob
+import locale
+path_test="/Users/denizdogan/Library/Mobile Documents/com~apple~CloudDocs/Github/kaleLab/nucleosome"
+sys.path.append(path_test)
+import core
+from core import curvature
+from core.curvature import *
+from core import analysis
+from core.analysis import *
+pool= Pool(pathos.multiprocessing.cpu_count()-2)
+locale.setlocale(locale.LC_ALL,'en_US.utf-8')
+
+
+
+
+@click.group()
+def cli():
+    pass
+
+
+
+
+
+
+@cli.command()
+@click.option('--pdb','-p', help="Give trajectory as *.pdb", required=True)
+@click.option('--selection1','-s1', required=True, help="Specify a group of atoms as stated in VMD")
+@click.option('--first','-f',  help="First frame to use", default=1, show_default=True)
+@click.option('--last','-l',  help="Last frame to use", default=-1, show_default=True)
+@click.option('--step','-s', help="To select every Nth frame", default=1, show_default=True)
+def rmsfperresid(pdb,selection1,first,last,step):
+    """
+    To find RMSF per residue
+
+    usage: nucleus rmsfperresid -p npt.pdb -s1 "chain A" -f 1 -l -1 -s 1
+    """
+    analysis.rmsfperresid(pdb, selection1, first, last, step)
+
+
+
+
+@cli.command()
+@click.option('--pdb','-p', help="Give trajectory as *.pdb", required=True)
+@click.option('--selection1','-s1', help="Specify a group of atoms", default="all", show_default=True)
+@click.option('--selection2','-s2', required=True, help="Specify a group of atoms")
+@click.option('--srad','-d', help="Solvent radius", default=1.4, show_default=True)
+@click.option('--bp','-b', help="Boolean (use when you calculate sasa for base pairs)", default=False, show_default=True)
+def sasa(pdb,selection1,selection2,srad,bp):
+    """
+    To find sasa per time frame
+
+    usage:
+    # for every residues in a chain\n
+    nucleus sasa -p npt.pdb -s1 "all" -s2 "chain A"  # --bp False
+
+    #for DNA base pairs \n
+    nucleus sasa -p npt.pdb -s1 "all" -s2 "chain I J" --bp True
+    """
+    analysis.sasa(pdb, selection1, selection2, srad, bp)
+
+
+@cli.command()
+@click.option('--pdb','-p', help="Give trajectory as *.pdb", required=True)
+@click.option('--selection1','-s1', default="chain I", help="ChainID in DNA",show_default=True)
+@click.option('--selection2','-s2', default="chain J", help="ChainID in DNA",show_default=True)
+@click.option('--sec','-sc', default="chain A B E F",help="Histone chains",show_default=True)
+def comdist(pdb,selection1,selection2,sec):
+    """
+    To find distance to strands
+
+    usage: nucleus comdist -p npt.pdb -s1 "chain I" -s2 "chain J" -sc "chain A B E F"
+    """
+    analysis.com_dist(pdb, selection1, selection2, sec)
+
+
+
+@cli.command()
+@click.option('--pdbs','-p', help="Give trajectory as *.pdb", required=True)
+def splitpdbs(pdbs):
+    """
+    To split pdbs
+
+    usage: nucleus splitpdbs -p npt.pdb
+    """
+    analysis.split_pdbs(pdbs)
+
+
+@cli.command()
+@click.option('--ppdbs','-p', help="Give trajectory as *.pdb", required=True)
+@click.option('--chain1','-c1', help="DNA chainID 1", required=True)
+@click.option('--chain2','-c2', help="DNA chainID 2", required=True)
+def curvanalysis(ppdbs,chain1,chain2):
+    """
+    Curvature analysis
+
+    usage: nucleus curvanalysis -p 02_pdbs/ -c1 "I" -c2 "J"
+    """
+
+    pdb_list = glob.glob(ppdbs+"*pdb")
+    pool.map(curvature.curvatured.final_call, pdb_list, len(pdb_list) * [str(chain1)], len(pdb_list) * [str(chain2)])
+    pool.close()
+    pool.terminate()
+
+    curvature.curvatured.combine_xyz()
+    curvature.curvatured.combine_rc()
+    curvature.curvatured.combine_nuce()
+
+
+@cli.command()
+@click.option('--ppdbs','-p', help="Give trajectory as *.pdb", required=True)
+@click.option('--selection1','-s1', required=True, help="Specify a group of atoms as stated in VMD")
+@click.option('--selection2','-s2', required=True, help="Specify a group of atoms as stated in VMD")
+@click.option('--cutoff','-c', help="Specify a cutoff value", default=5.0, show_default=True)
+def contact(ppdbs,selection1,selection2,cutoff):
+    """
+    To find contacts between two selections, default cutoff value is 5 Angstrom
+
+    usage: nucleus contact -p 02_pdbs/ -s1 "chain A" -s2 "nucleic"
+    """
+    pdb_list = glob.glob(ppdbs + "*pdb")
+    pool.map(analysis.contact.contact, pdb_list,
+             len(pdb_list) * [str(selection1)], len(pdb_list) * [str(selection2)], len(pdb_list) * [str(cutoff)])
+    pool.close()
+    pool.terminate()
+
+    analysis.contact.combine_contact(selection1,selection2)
+
+
+if __name__ == '__main__':
+    cli(obj={})
+
+
+
+
+
+
+
+
+
