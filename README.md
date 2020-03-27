@@ -3,6 +3,7 @@
 #HOW TO INSTALL
 
 git clone https://github.com/denizdgn/nucleosome.git
+
 cd nucleosome
 
 conda create --yes --quiet --name nucleosome python=3.6
