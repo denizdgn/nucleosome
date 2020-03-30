@@ -5,11 +5,8 @@
     <orderEntry type="jdk" jdkName="Python 3.7 (biowulf)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="nucleus" />
-    <orderEntry type="module" module-name="PackThemAll" />
     <orderEntry type="module" module-name="pdbs" />
     <orderEntry type="module" module-name="ToModifyPdb" />
-    <orderEntry type="module" module-name="KIF" />
-    <orderEntry type="module" module-name="modeller" />
-    <orderEntry type="module" module-name="covid" />
+    <orderEntry type="module" module-name="slurm" />
   </component>
 </module>

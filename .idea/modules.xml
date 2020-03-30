@@ -2,14 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../../Master_Projects/KIF/.idea/KIF.iml" filepath="$PROJECT_DIR$/../../Master_Projects/KIF/.idea/KIF.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../../PackThemAll/.idea/PackThemAll.iml" filepath="$PROJECT_DIR$/../../PackThemAll/.idea/PackThemAll.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../ToModifyPdb/.idea/ToModifyPdb.iml" filepath="$PROJECT_DIR$/../../ToModifyPdb/.idea/ToModifyPdb.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../../covid/.idea/covid.iml" filepath="$PROJECT_DIR$/../../covid/.idea/covid.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../../modeller/.idea/modeller.iml" filepath="$PROJECT_DIR$/../../modeller/.idea/modeller.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/nucleosome.iml" filepath="$PROJECT_DIR$/.idea/nucleosome.iml" />
       <module fileurl="file://$PROJECT_DIR$/../nucleus/.idea/nucleus.iml" filepath="$PROJECT_DIR$/../nucleus/.idea/nucleus.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../pdbs/.idea/pdbs.iml" filepath="$PROJECT_DIR$/../../pdbs/.idea/pdbs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../slurm/.idea/slurm.iml" filepath="$PROJECT_DIR$/../slurm/.idea/slurm.iml" />
     </modules>
   </component>
 </project>

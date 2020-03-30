@@ -9,6 +9,7 @@ import logging
 import signal
 import pathos
 import glob
+import shutil
 pool= Pool(pathos.multiprocessing.cpu_count()-2)
 
 
@@ -39,11 +40,11 @@ class contact():
         logging.info(f'Merging files ...')
         #get all files in a folder
         files_csv = glob.glob(pathx_toreadz + f'/*.csv')
-        for file in files_csv:
-            df = pd.read_csv(file)
+        for time in range(len(files_csv)):
+            df = pd.read_csv(f'{pathx_toreadz}/{sel1}_to_{sel2}_t{time}.csv')
             df3[df.columns[1]] = df.iloc[:,1]
             signal.signal(signal.SIGINT, handler)
-        df3["mean"] = df3.iloc[:, 1:].mean(axis=1)
+        df3["mean"] = df3.iloc[:, 0:].mean(axis=1)
         df4=pd.concat([pd.DataFrame(df.iloc[:,0]),df3],axis=1)
         df4.to_csv(f'{pathx_towrite}/{folder}.csv', index=None)
 
@@ -94,20 +95,8 @@ class contact():
             a=reside_atoms.contacts(selection=dna_chain,cutoff=float(cutoff))
             contact_number.append(len(a[1]))
         df_res_cont_num[f'contact_number_{time}'] = contact_number
-        df_res_cont_num.to_csv(pathx + "/contact_from_" + sel1 + "_to_" + sel2 + f'_t{time}.csv',
+        df_res_cont_num.to_csv(f'{pathx}/{sel1}_to_{sel2}_t{time}.csv',
                                    index=None)
-
-
-
-
-
-
-
-
-
-
-
-
 
 def rmsfperresid(pdb,selection1,first,last,step):
     """
@@ -146,96 +135,109 @@ def rmsfperresid(pdb,selection1,first,last,step):
 
 
 
-#def sasa(pdb:str,selection1:str,restrict:str,srad:float):
-#
-#    path=os.getcwd()
-#    os.chdir(path)
-#    if not os.path.exists("04_sasa"):
-#        os.makedirs("04_sasa")
-#    pathx = path + "/04_sasa"
-#    mol = vmd.molecule.load('pdb', pdb)
-#
-#    num_frame = vmd.molecule.numframes(mol)
-#    df_sasa = pd.DataFrame(columns=["sasa", "time"])
-#    sasa_l = []
-#    for i in range(num_frame):
-#        logging.info(f'Running on frame # {i + 1}')
-#        select1 = atomsel(selection1, frame=i + 1)
-#        rest1 = atomsel(restrict, frame=i + 1)
-#        sasa = select1.sasa(srad=srad, restrict=rest1)
-#        sasa_l.append(sasa)
-#
-#    df_sasa["time"] = range(1,num_frame+1)
-#    df_sasa["sasa"] = sasa_l
-#    sel1 = selection1.replace(" ", "")
-#    df_sasa.to_csv(pathx + "/sasa_" + sel1 +"_"+restrict +".csv", index=None)
+
+class sasa():
+    def combine_sasa(selection1,selection2,bp):
+        def handler(sig, frame):
+            raise KeyboardInterrupt("CTRL-C!")
+
+        sel1 = selection1.replace(" ", "")
+        sel2 = selection2.replace(" ", "")
+
+        pathx = os.getcwd()
+        pathx_toreadz = pathx + f'/04_sasa/{sel1}_to_{sel2}'
+
+        folder = f'{sel1}_to_{sel2}'
+        logging.info(f'Running in folder: {folder} ...')
 
 
+        if not os.path.exists(pathx + f'/04_sasa_merged/{folder}'):
+            os.makedirs(pathx + f'/04_sasa_merged/{folder}', exist_ok=True)
+        pathx_towrite = pathx + f'/04_sasa_merged/{folder}'
 
+        df3 = pd.DataFrame()
+        logging.info(f'Merging sasa files ...')
 
-def sasa(pdb:str,selection1:str,selection2:str,srad:float,bp=False):
-    """
-    :param pdb: *pdb trajectory
-    :param selection1: everything in  the system (protein+DNA)
-    :param selection2: chain IDs
-    :param srad: Solvent radius
-    :param bp: boolean - base pair option
-    :return:
-    """
-    def handler(sig, frame):
-        raise KeyboardInterrupt("CTRL-C!")
+        #get all files in a folder
+        if (bp):
+            files_csv = glob.glob(pathx_toreadz + f'/*bp.csv')
+            for time in range(len(files_csv)):
+                df = pd.read_csv(f'{pathx_toreadz}/{sel1}_{sel2}_t{time}_bp.csv')
+                df3[df.columns[1]] = df.iloc[:,1]
+                signal.signal(signal.SIGINT, handler)
+            df3["mean"] = df3.iloc[:, 0:].mean(axis=1)
+            df4=pd.concat([pd.DataFrame(df.iloc[:,0]),df3],axis=1)
+            df4.to_csv(f'{pathx_towrite}/{folder}_bp.csv', index=None)
+        else:
+            files_csv = glob.glob(pathx_toreadz + f'/*notbp.csv')
+            for time in range(len(files_csv)):
+                df = pd.read_csv(f'{pathx_toreadz}/{sel1}_{sel2}_t{time}_notbp.csv')
+                df3[df.columns[1]] = df.iloc[:,1]
+                signal.signal(signal.SIGINT, handler)
+            df3["mean"] = df3.iloc[:, 0:].mean(axis=1)
+            df4=pd.concat([pd.DataFrame(df.iloc[:,0]),df3],axis=1)
+            df4.to_csv(f'{pathx_towrite}/{folder}_notbp.csv', index=None)
 
-    class Error(Exception):
-        pass
-    class basepairError(Error):
-        pass
-    class nonNucleotideError(Error):
-        pass
+    def sasa(pdb,selection1:str,selection2:str,srad:float,bp):
+        """
+        :param pdb: *pdb trajectory
+        :param selection1: everything in  the system (protein+DNA)
+        :param selection2: chain IDs
+        :param srad: Solvent radius
+        :param bp: boolean - base pair option
+        :return:
+        """
+        def handler(sig, frame):
+            raise KeyboardInterrupt("CTRL-C!")
 
-    path=os.getcwd()
-    os.chdir(path)
+        class Error(Exception):
+            pass
+        class basepairError(Error):
+            pass
+        class nonNucleotideError(Error):
+            pass
 
-    if not os.path.exists("04_sasa"):
-        os.makedirs("04_sasa")
-    pathx = path + "/04_sasa"
-    logging.info(f'Reading trajectory .. ')
-    mol = vmd.molecule.load('pdb', pdb)
-    num_frame=vmd.molecule.numframes(mol)
+        path=os.getcwd()
 
-    select1 = atomsel(f'{selection1}', frame=1)
-    select2 = atomsel(f'{selection2}', frame=1)
+        sel1 = selection1.replace(" ", "")
+        sel2 = selection2.replace(" ", "")
 
-    try:
-        if (len(set(select2.chain)) != 1):
-                if (all(select2.nucleic)):
-                    if (bp):
-                        pass
+        if not os.path.exists(f'04_sasa/{sel1}_to_{sel2}'):
+            os.makedirs(f'04_sasa/{sel1}_to_{sel2}', exist_ok=True)
+        pathx = path + f'/04_sasa/{sel1}_to_{sel2}'
+
+        logging.info(f'Reading {pdb} .. ')
+        mol = vmd.molecule.load('pdb', pdb)
+        time = str(pdb.split("md_")[1].split(".pd")[0])
+
+        select1 = atomsel(f'{selection1}')
+        select2 = atomsel(f'{selection2}')
+
+        try:
+            if (len(set(select2.chain)) != 1):
+                    if (all(select2.nucleic)):
+                        if (bp):
+                            pass
+                        else:
+                            raise basepairError
                     else:
-                        raise basepairError
-                else:
-                    raise nonNucleotideError
+                        raise nonNucleotideError
 
-    except basepairError:
-        print("\n\n!!!! basepairError: Use -bp option to calculate SASA for nucleotide base pairs !!!!")
-        sys.exit(1)
+        except basepairError:
+            print("\n\n!!!! basepairError: Use -bp option to calculate SASA for nucleotide base pairs !!!!")
+            sys.exit(1)
 
-    except nonNucleotideError:
-        print("\n\n!!!! nonNucleotideError: base pairs - SASA calculations only enabled for nucleotides !!!!")
-        sys.exit(1)
+        except nonNucleotideError:
+            print("\n\n!!!! nonNucleotideError: base pairs - SASA calculations only enabled for nucleotides !!!!")
+            sys.exit(1)
 
 
+        resids_select2 = list(OrderedDict.fromkeys(select2.resid).keys())
+        df_sasa = pd.DataFrame()
 
-
-    resids_select2 = list(OrderedDict.fromkeys(select2.resid).keys())
-
-    #num_frame = 2
-    df_sasa = pd.DataFrame()
-    for i in range(num_frame):
         signal.signal(signal.SIGINT, handler)
-
-        logging.info(f'Running on frame # {i + 1}')
-        select1 = atomsel(selection1, frame=i + 1)
-
+        logging.info(f'Running on frame # {time}')
+        select1 = atomsel(selection1)
         if (bp):
             sasa_l = []
             res_list = []
@@ -243,31 +245,24 @@ def sasa(pdb:str,selection1:str,selection2:str,srad:float,bp=False):
             for j, resids in enumerate(resids_select2):
                 logging.info(f'{resids} in {selection1} and  {resids_select2[-j - 1]} in {selection2}')
                 res_list.append(f'fc{resids}_sc{resids_select2[-j - 1]}')
-                rest_resid = atomsel(f'({selection1} and resid \"{resids}\") or ({selection2} and resid \"{resids_select2[-j - 1]}\")', frame=i + 1)
+                rest_resid = atomsel(f'({selection1} and resid \"{resids}\") or ({selection2} and resid \"{resids_select2[-j - 1]}\")')
                 sasa = select1.sasa(srad=srad, restrict=rest_resid)
                 sasa_l.append(sasa)
+                signal.signal(signal.SIGINT, handler)
             df_sasa["resid_bp"] = res_list
-            df_sasa[f'sasa_{i + 1}'] = sasa_l
+            df_sasa[f'sasa_{time}'] = sasa_l
+            df_sasa.to_csv(f'{pathx}/{sel1}_{sel2}_t{time}_bp.csv', index=None)
 
         else:
             sasa_l = []
             for resid in resids_select2:
-                #print(resid)
-                rest_resid =  atomsel(f'{selection2} and resid \"{resid}\"', frame=i + 1)
+                rest_resid =  atomsel(f'{selection2} and resid \"{resid}\"')
                 sasa = select1.sasa(srad=srad,restrict=rest_resid)
                 sasa_l.append(sasa)
+                signal.signal(signal.SIGINT, handler)
             df_sasa["resid"] = resids_select2
-            df_sasa[f'sasa_{i+1}'] = sasa_l
-
-
-    df_sasa["mean"]=df_sasa.iloc[:,1:].mean(axis=1)
-    sel2=selection2.replace(" ", "")
-
-    if (bp):
-        df_sasa.to_csv(pathx+"/sasa_"+sel2+"_bp.csv",index=None)
-    elif (not bp):
-        df_sasa.to_csv(pathx + "/sasa_" + sel2 + ".csv", index=None)
-
+            df_sasa[f'sasa_{time}'] = sasa_l
+            df_sasa.to_csv(f'{pathx}/{sel1}_{sel2}_t{time}_notbp.csv', index=None)
 
 
 
@@ -363,8 +358,37 @@ def split_pdbs(target):
 
 
 
+def clean():
+    folders = list(os.walk("."))[1:]
+    for dir, subdirs, files in folders:
+        if len(os.listdir(dir)) == 0:
+            logging.info(f'Deleting empty folder - {dir}')
+            shutil.rmtree(dir)
+
+    if os.path.exists('02_pdbs') and os.path.isdir('02_pdbs'):
+        logging.info(f'Removing folder - 02_pdbs')
+        shutil.rmtree('02_pdbs')
+
+    if os.path.exists('09_nuc_e') and os.path.isdir('09_nuc_e'):
+        logging.info(f'Removing folder - 09_nuc_e')
+        shutil.rmtree('09_nuc_e')
+
+    if os.path.exists('08_nuc_rc_sm') and os.path.isdir('08_nuc_rc_sm'):
+        logging.info(f'Removing folder - 08_nuc_rc_sm')
+        shutil.rmtree('08_nuc_rc_sm')
+
+    if os.path.exists('07_nuc_com_xyz') and os.path.isdir('07_nuc_com_xyz'):
+        logging.info(f'Removing folder - 07_nuc_com_xyz')
+        shutil.rmtree('07_nuc_com_xyz')
+
+    if os.path.exists('06_contact') and os.path.isdir('06_contact'):
+        logging.info(f'Removing folder - 06_contact')
+        shutil.rmtree('06_contact')
 
 
+    if os.path.exists('04_sasa') and os.path.isdir('04_sasa'):
+        logging.info(f'Removing folder - 04_sasa')
+        shutil.rmtree('04_sasa')
 
 
 

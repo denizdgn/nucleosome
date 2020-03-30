@@ -3,7 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="c7750ff1-c1bc-47d9-8858-6b956887b92a" name="Default Changelist" comment="">
       <change afterPath="$PROJECT_DIR$/../../ToModifyPdb/.idea/ToModifyPdb.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/nucleosome.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/nucleosome.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/analysis.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/analysis.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nucleus" beforeDir="false" afterPath="$PROJECT_DIR$/nucleus" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,6 +38,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="Python" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
@@ -44,6 +50,7 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/automatize" />
       <recent name="$PROJECT_DIR$/../../covid/xxx" />
     </key>
   </component>
@@ -109,7 +116,8 @@
       <workItem from="1585467592409" duration="1865000" />
       <workItem from="1585480805334" duration="7454000" />
       <workItem from="1585503668197" duration="3482000" />
-      <workItem from="1585519159038" duration="2682000" />
+      <workItem from="1585519159038" duration="3914000" />
+      <workItem from="1585587385193" duration="7471000" />
     </task>
     <servers />
   </component>
@@ -143,10 +151,10 @@
     </state>
     <state x="-130" y="-915" key="SettingsEditor/0.23.1680.977/-144.-1057.1920.1057@0.23.1680.977" timestamp="1585484978201" />
     <state x="362" y="145" key="SettingsEditor/0.23.1680.977/1680.23.1920.1177@0.23.1680.977" timestamp="1584006023104" />
-    <state x="538" y="339" key="com.intellij.ide.util.TipDialog" timestamp="1585519163326">
+    <state x="538" y="339" key="com.intellij.ide.util.TipDialog" timestamp="1585587667959">
       <screen x="0" y="23" width="1680" height="977" />
     </state>
-    <state x="538" y="339" key="com.intellij.ide.util.TipDialog/0.23.1680.977/-144.-1057.1920.1057@0.23.1680.977" timestamp="1585519163326" />
+    <state x="538" y="339" key="com.intellij.ide.util.TipDialog/0.23.1680.977/-144.-1057.1920.1057@0.23.1680.977" timestamp="1585587667959" />
     <state x="538" y="339" key="com.intellij.ide.util.TipDialog/0.23.1680.977/1680.23.1920.1177@0.23.1680.977" timestamp="1584001779638" />
     <state x="538" y="339" key="com.intellij.ide.util.TipDialog/0.23.1680.977@0.23.1680.977" timestamp="1584800271916" />
     <state x="483" y="270" width="670" height="676" key="search.everywhere.popup" timestamp="1585245222567">

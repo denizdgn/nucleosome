@@ -64,23 +64,32 @@ def rmsfperresid(pdb,selection1,first,last,step):
 
 
 @cli.command()
-@click.option('--pdb','-p', help="Give trajectory as *.pdb", required=True)
+@click.option('--ppdbs','-p', help="Give trajectory as *.pdb", required=True)
 @click.option('--selection1','-s1', help="Specify a group of atoms", default="all", show_default=True)
 @click.option('--selection2','-s2', required=True, help="Specify a group of atoms")
 @click.option('--srad','-d', help="Solvent radius", default=1.4, show_default=True)
-@click.option('--bp','-b', help="Boolean (use when you calculate sasa for base pairs)", default=False, show_default=True)
-def sasa(pdb,selection1,selection2,srad,bp):
+@click.option('--bp','-b',
+              help="Boolean (use when you calculate sasa for base pairs)", default=False, show_default=True)
+def sasa(ppdbs,selection1,selection2,srad,bp):
     """
     To find sasa per time frame
 
     usage:
     # for every residues in a chain\n
-    nucleus sasa -p npt.pdb -s1 "all" -s2 "chain A"  # --bp False
+    nucleus sasa -p 02_pdbs/  -s1 "all" -s2 "chain I"  # --bp False
 
     #for DNA base pairs \n
-    nucleus sasa -p npt.pdb -s1 "all" -s2 "chain I J" --bp True
+    nucleus sasa -p 02_pdbs/  -s1 "all" -s2 "chain I J" --bp True
     """
-    analysis.sasa(pdb, selection1, selection2, srad, bp)
+    pdb_list = glob.glob(ppdbs + "*pdb")
+    pool.map(analysis.sasa.sasa, pdb_list,
+             len(pdb_list) * [str(selection1)], len(pdb_list) * [str(selection2)],
+             len(pdb_list) * [srad], len(pdb_list) * [str(bp)])
+    pool.close()
+    pool.terminate()
+
+    analysis.sasa.combine_sasa(selection1,selection2,bp)
+
 
 
 @cli.command()
@@ -110,24 +119,50 @@ def splitpdbs(pdbs):
 
 
 @cli.command()
+def clean():
+    """
+    To clean
+
+    usage: nucleus clean
+    """
+    analysis.clean()
+
+
+
+@cli.command()
 @click.option('--ppdbs','-p', help="Give trajectory as *.pdb", required=True)
 @click.option('--chain1','-c1', help="DNA chainID 1", required=True)
 @click.option('--chain2','-c2', help="DNA chainID 2", required=True)
-def curvanalysis(ppdbs,chain1,chain2):
+@click.option('--merge','-m', type=click.Choice(['xyz', 'rc', 'nuce',"all"]), default="all", show_default=True, help="to merge files")
+@click.option('--onlymerge','-om', type=click.Choice([True, False]), default=False, show_default=True, help="to merge files")
+def curvanalysis(ppdbs,chain1,chain2,merge,onlymerge):
     """
     Curvature analysis
 
-    usage: nucleus curvanalysis -p 02_pdbs/ -c1 "I" -c2 "J"
+    usage: nucleus curvanalysis -p 02_pdbs/ -c1 "I" -c2 "J"  # default option # -m "all" -om False
     """
+    if onlymerge == False :
+        print("Run!")
+        pdb_list = glob.glob(ppdbs+"*pdb")
+        pool.map(curvature.curvatured.final_call, pdb_list, len(pdb_list) * [str(chain1)], len(pdb_list) * [str(chain2)])
+        pool.close()
+        pool.terminate()
 
-    pdb_list = glob.glob(ppdbs+"*pdb")
-    pool.map(curvature.curvatured.final_call, pdb_list, len(pdb_list) * [str(chain1)], len(pdb_list) * [str(chain2)])
-    pool.close()
-    pool.terminate()
+    if merge == "xyz":
+        logging.info(f'Merging ..{merge}')
+        curvature.curvatured.combine_xyz()
+    elif merge =="rc":
+        logging.info(f'Merging ..{merge}')
+        curvature.curvatured.combine_rc()
+    elif merge == "nuce":
+        logging.info(f'Merging ..{merge}')
+        curvature.curvatured.combine_nuce()
+    elif merge == "all":
+        logging.info(f'Merging ..{merge}')
+        curvature.curvatured.combine_xyz()
+        curvature.curvatured.combine_rc()
+        curvature.curvatured.combine_nuce()
 
-    curvature.curvatured.combine_xyz()
-    curvature.curvatured.combine_rc()
-    curvature.curvatured.combine_nuce()
 
 
 @cli.command()
