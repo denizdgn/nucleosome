@@ -3,8 +3,6 @@
 
 import os
 import pandas as pd
-import pathos
-from pathos.multiprocessing import ProcessingPool as Pool
 import sys
 from collections import OrderedDict
 import logging
@@ -12,8 +10,6 @@ import io
 import numpy as np
 import glob
 import numpy.linalg as la
-import matplotlib.pylab as plt
-import seaborn as sns
 import itertools
 import signal
 
