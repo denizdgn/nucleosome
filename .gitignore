@@ -1,0 +1,8 @@
+
+*.xml
+automatize/auto_graph.sh
+automatize/auto.sh
+automatize/
+.idea/workspace.xml
+core/__pycache__/analysis.cpython-36.pyc
+core/__pycache__/analysis.cpython-37.pyc
