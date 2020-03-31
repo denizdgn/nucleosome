@@ -165,17 +165,21 @@ class sasa():
                 df = pd.read_csv(f'{pathx_toreadz}/{sel1}_{sel2}_t{time}_bp.csv')
                 df3[df.columns[1]] = df.iloc[:,1]
                 signal.signal(signal.SIGINT, handler)
+            df = pd.read_csv(f'{pathx_toreadz}/{sel1}_{sel2}_t83_bp.csv')
             df3["mean"] = df3.iloc[:, 0:].mean(axis=1)
             df4=pd.concat([pd.DataFrame(df.iloc[:,0]),df3],axis=1)
+            logging.info(f'writing to file {folder}')
             df4.to_csv(f'{pathx_towrite}/{folder}_bp.csv', index=None)
         else:
             files_csv = glob.glob(pathx_toreadz + f'/*notbp.csv')
             for time in range(len(files_csv)):
                 df = pd.read_csv(f'{pathx_toreadz}/{sel1}_{sel2}_t{time}_notbp.csv')
                 df3[df.columns[1]] = df.iloc[:,1]
-                signal.signal(signal.SIGINT, handler)
+                #signal.signal(signal.SIGINT, handler)
+            df = pd.read_csv(f'{pathx_toreadz}/{sel1}_{sel2}_t83_notbp.csv')
             df3["mean"] = df3.iloc[:, 0:].mean(axis=1)
             df4=pd.concat([pd.DataFrame(df.iloc[:,0]),df3],axis=1)
+            logging.info(f'writing to file {folder}')
             df4.to_csv(f'{pathx_towrite}/{folder}_notbp.csv', index=None)
 
     def sasa(pdb,selection1:str,selection2:str,srad:float,bp):
@@ -236,7 +240,7 @@ class sasa():
         df_sasa = pd.DataFrame()
 
         signal.signal(signal.SIGINT, handler)
-        logging.info(f'Running on frame # {time}')
+        logging.info(f'Running on pdb # {pdb}')
         select1 = atomsel(selection1)
         if (bp):
             sasa_l = []
@@ -251,6 +255,7 @@ class sasa():
                 signal.signal(signal.SIGINT, handler)
             df_sasa["resid_bp"] = res_list
             df_sasa[f'sasa_{time}'] = sasa_l
+            logging.info(f'writing to file {sel1}_{sel2}_t{time}_bp.csv')
             df_sasa.to_csv(f'{pathx}/{sel1}_{sel2}_t{time}_bp.csv', index=None)
 
         else:
@@ -262,6 +267,7 @@ class sasa():
                 signal.signal(signal.SIGINT, handler)
             df_sasa["resid"] = resids_select2
             df_sasa[f'sasa_{time}'] = sasa_l
+            logging.info(f'writing to file {sel1}_{sel2}_t{time}_notbp.csv')
             df_sasa.to_csv(f'{pathx}/{sel1}_{sel2}_t{time}_notbp.csv', index=None)
 
 
@@ -358,7 +364,9 @@ def split_pdbs(target):
 
 
 
+
 def clean():
+
     folders = list(os.walk("."))[1:]
     for dir, subdirs, files in folders:
         if len(os.listdir(dir)) == 0:
