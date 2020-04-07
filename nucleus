@@ -3,8 +3,6 @@ import sys
 import click
 import glob
 import locale
-path_test="/Users/denizdogan/Library/Mobile Documents/com~apple~CloudDocs/Github/kaleLab/nucleosome"
-sys.path.append(path_test)
 import core
 from core import analysis
 from core import curvature
