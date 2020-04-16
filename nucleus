@@ -30,13 +30,9 @@ def cli():
 #@click.option('--bp','-b', help="Boolean (use when you calculate sasa for base pairs)", default=False, show_default=True)
 def graphs(csvfile,selection1,selection2):
     """
-    To find sasa per time frame
+    To draw graphs
 
     usage:
-    # for every residues in a chain\n
-    nucleus sasa -p npt.pdb -s1 "all" -s2 "chain A"  # --bp False
-
-    #for DNA base pairs \n
     nucleus graphs -c 06_contact_merged/chainA_to_chainE/chainA_to_chainE.csv -s1 "chain A" -s2 "chain E"
     """
     graphxs.contact.heatmaps(csvfile,selection1,selection2)
