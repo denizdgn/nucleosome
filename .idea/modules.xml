@@ -2,11 +2,18 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../../ToModifyPdb/.idea/ToModifyPdb.iml" filepath="$PROJECT_DIR$/../../ToModifyPdb/.idea/ToModifyPdb.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../CSBscripts/.idea/CSBscripts.iml" filepath="$PROJECT_DIR$/../../CSBscripts/.idea/CSBscripts.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../LLITM/.idea/LLITM.iml" filepath="$PROJECT_DIR$/../../LLITM/.idea/LLITM.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../graphs/.idea/graphs.iml" filepath="$PROJECT_DIR$/../graphs/.idea/graphs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../learn/.idea/learn.iml" filepath="$PROJECT_DIR$/../../learn/.idea/learn.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../met/.idea/met.iml" filepath="$PROJECT_DIR$/../../met/.idea/met.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../minnie/.idea/minnie.iml" filepath="$PROJECT_DIR$/../../minnie/.idea/minnie.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../minnie/.idea/minniex.iml" filepath="$PROJECT_DIR$/../../minnie/.idea/minniex.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/nucleosome.iml" filepath="$PROJECT_DIR$/.idea/nucleosome.iml" />
       <module fileurl="file://$PROJECT_DIR$/../nucleus/.idea/nucleus.iml" filepath="$PROJECT_DIR$/../nucleus/.idea/nucleus.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../pdbs/.idea/pdbs.iml" filepath="$PROJECT_DIR$/../../pdbs/.idea/pdbs.iml" />
       <module fileurl="file://$PROJECT_DIR$/../slurm/.idea/slurm.iml" filepath="$PROJECT_DIR$/../slurm/.idea/slurm.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../wulf/.idea/wulf.iml" filepath="$PROJECT_DIR$/../../wulf/.idea/wulf.iml" />
     </modules>
   </component>
 </project>

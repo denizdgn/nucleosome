@@ -2,18 +2,28 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c7750ff1-c1bc-47d9-8858-6b956887b92a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../../ToModifyPdb/.idea/ToModifyPdb.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../CSBscripts/.idea/CSBscripts.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../CSBscripts/get_fasta.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../CSBscripts/modeller/modeller.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../LLITM/graphs/haddock_kd.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/correlation.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vis/b_factor.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/nucleosome.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/nucleosome.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/analysis.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/analysis.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/graphxs.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/graphxs.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nucleus" beforeDir="false" afterPath="$PROJECT_DIR$/nucleus" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="nucleosome" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -38,7 +48,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="Python" />
+    <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="Bash&#10;Python" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
@@ -48,8 +58,18 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
+  <component name="PyConsoleOptionsProvider">
+    <option name="myPythonConsoleState">
+      <console-settings>
+        <option name="useSoftWraps" value="true" />
+      </console-settings>
+    </option>
+  </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/graphs" />
+      <recent name="$PROJECT_DIR$/../slurm/one" />
+      <recent name="$PROJECT_DIR$/../../LLITM" />
       <recent name="$PROJECT_DIR$/automatize" />
       <recent name="$PROJECT_DIR$/../../covid/xxx" />
     </key>
@@ -77,6 +97,18 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -118,6 +150,51 @@
       <workItem from="1585503668197" duration="3482000" />
       <workItem from="1585519159038" duration="3914000" />
       <workItem from="1585587385193" duration="7471000" />
+      <workItem from="1585727730793" duration="316000" />
+      <workItem from="1585810548020" duration="15351000" />
+      <workItem from="1585845925191" duration="2033000" />
+      <workItem from="1585848003566" duration="118000" />
+      <workItem from="1585848135017" duration="18265000" />
+      <workItem from="1585895596413" duration="3564000" />
+      <workItem from="1585921198135" duration="386000" />
+      <workItem from="1586160621508" duration="4719000" />
+      <workItem from="1586216975301" duration="270000" />
+      <workItem from="1586217256042" duration="595000" />
+      <workItem from="1586243307465" duration="5563000" />
+      <workItem from="1586270385215" duration="226000" />
+      <workItem from="1586292919797" duration="8868000" />
+      <workItem from="1586306965016" duration="4791000" />
+      <workItem from="1586312360986" duration="10461000" />
+      <workItem from="1586458973098" duration="313000" />
+      <workItem from="1586495393389" duration="12500000" />
+      <workItem from="1586584985803" duration="10051000" />
+      <workItem from="1586683806464" duration="10010000" />
+      <workItem from="1586814468171" duration="16390000" />
+      <workItem from="1587079437366" duration="18757000" />
+      <workItem from="1587324717242" duration="7399000" />
+      <workItem from="1587347058637" duration="258000" />
+      <workItem from="1587366914781" duration="4702000" />
+      <workItem from="1587451093087" duration="19170000" />
+      <workItem from="1587637836579" duration="1728000" />
+      <workItem from="1587660016124" duration="53000" />
+      <workItem from="1587660081807" duration="4244000" />
+      <workItem from="1587664443233" duration="8174000" />
+      <workItem from="1587905544685" duration="34522000" />
+      <workItem from="1588043575927" duration="29567000" />
+      <workItem from="1588166174030" duration="2612000" />
+      <workItem from="1588320562389" duration="266000" />
+      <workItem from="1588415501788" duration="39980000" />
+      <workItem from="1588700709248" duration="187000" />
+      <workItem from="1588700991958" duration="267000" />
+      <workItem from="1588734221930" duration="2853000" />
+      <workItem from="1588756661894" duration="1904000" />
+      <workItem from="1588930471126" duration="2432000" />
+      <workItem from="1588933062283" duration="3988000" />
+      <workItem from="1588945593984" duration="3404000" />
+      <workItem from="1589019314104" duration="788000" />
+      <workItem from="1589135984358" duration="1935000" />
+      <workItem from="1589221073171" duration="23212000" />
+      <workItem from="1589469392078" duration="4170000" />
     </task>
     <servers />
   </component>
@@ -129,9 +206,14 @@
       <screen x="0" y="23" width="1680" height="977" />
     </state>
     <state x="461" y="172" key="#Deployment/0.23.1680.977/1680.23.1920.1177@0.23.1680.977" timestamp="1583938167728" />
-    <state x="325" y="168" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1585236883692">
+    <state x="448" y="164" key="#Notifications" timestamp="1587676798293">
       <screen x="0" y="23" width="1680" height="977" />
     </state>
+    <state x="448" y="164" key="#Notifications/0.23.1680.977/-144.-1057.1920.1057@0.23.1680.977" timestamp="1587676798293" />
+    <state x="325" y="168" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1588700817318">
+      <screen x="0" y="23" width="1680" height="977" />
+    </state>
+    <state x="325" y="168" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1680.977/-119.-1057.1920.1057@0.23.1680.977" timestamp="1588700817318" />
     <state x="325" y="168" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1680.977/-144.-1057.1920.1057@0.23.1680.977" timestamp="1585236883692" />
     <state x="325" y="168" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1680.977@0.23.1680.977" timestamp="1583220598287" />
     <state x="539" y="342" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1585268455732">
@@ -146,21 +228,41 @@
       <screen x="0" y="23" width="1680" height="977" />
     </state>
     <state x="556" y="132" key="#functionsx/0.23.1680.977@0.23.1680.977" timestamp="1583220616958" />
-    <state x="-130" y="-915" key="SettingsEditor" timestamp="1585484978201">
-      <screen x="-144" y="-1057" width="1920" height="1057" />
-    </state>
-    <state x="-130" y="-915" key="SettingsEditor/0.23.1680.977/-144.-1057.1920.1057@0.23.1680.977" timestamp="1585484978201" />
-    <state x="362" y="145" key="SettingsEditor/0.23.1680.977/1680.23.1920.1177@0.23.1680.977" timestamp="1584006023104" />
-    <state x="538" y="339" key="com.intellij.ide.util.TipDialog" timestamp="1585587667959">
+    <state x="392" y="443" key="FileChooserDialogImpl" timestamp="1587451158528">
       <screen x="0" y="23" width="1680" height="977" />
     </state>
-    <state x="538" y="339" key="com.intellij.ide.util.TipDialog/0.23.1680.977/-144.-1057.1920.1057@0.23.1680.977" timestamp="1585587667959" />
+    <state x="392" y="443" key="FileChooserDialogImpl/0.23.1680.977/-144.-1057.1920.1057@0.23.1680.977" timestamp="1587451158528" />
+    <state x="281" y="75" key="SettingsEditor" timestamp="1587676818247">
+      <screen x="0" y="23" width="1680" height="977" />
+    </state>
+    <state x="281" y="75" key="SettingsEditor/0.23.1680.977/-144.-1057.1920.1057@0.23.1680.977" timestamp="1587676818247" />
+    <state x="362" y="145" key="SettingsEditor/0.23.1680.977/1680.23.1920.1177@0.23.1680.977" timestamp="1584006023104" />
+    <state width="794" height="489" key="XDebugger.FullValuePopup" timestamp="1588166140658">
+      <screen x="0" y="23" width="1680" height="977" />
+    </state>
+    <state width="794" height="489" key="XDebugger.FullValuePopup/0.23.1680.977/-144.-1057.1920.1057@0.23.1680.977" timestamp="1588166140658" />
+    <state x="2295" y="365" key="com.intellij.ide.util.TipDialog" timestamp="1589469391895">
+      <screen x="1680" y="23" width="1920" height="1057" />
+    </state>
+    <state x="538" y="355" key="com.intellij.ide.util.TipDialog/0.23.1680.1027/-144.-1057.1920.1057@0.23.1680.1027" timestamp="1586814468150" />
+    <state x="538" y="339" key="com.intellij.ide.util.TipDialog/0.23.1680.977/-119.-1057.1920.1057@0.23.1680.977" timestamp="1589221130979" />
+    <state x="538" y="339" key="com.intellij.ide.util.TipDialog/0.23.1680.977/-144.-1057.1920.1057@0.23.1680.977" timestamp="1588415501679" />
+    <state x="2295" y="365" key="com.intellij.ide.util.TipDialog/0.23.1680.977/1680.23.1920.1057@1680.23.1920.1057" timestamp="1589469391895" />
     <state x="538" y="339" key="com.intellij.ide.util.TipDialog/0.23.1680.977/1680.23.1920.1177@0.23.1680.977" timestamp="1584001779638" />
     <state x="538" y="339" key="com.intellij.ide.util.TipDialog/0.23.1680.977@0.23.1680.977" timestamp="1584800271916" />
-    <state x="483" y="270" width="670" height="676" key="search.everywhere.popup" timestamp="1585245222567">
+    <state x="496" y="23" width="791" height="975" key="recent.locations.popup" timestamp="1589288357065">
       <screen x="0" y="23" width="1680" height="977" />
     </state>
-    <state x="483" y="270" width="670" height="676" key="search.everywhere.popup/0.23.1680.977/-144.-1057.1920.1057@0.23.1680.977" timestamp="1585245222567" />
+    <state x="496" y="23" width="791" height="975" key="recent.locations.popup/-119.-1057.1920.1057/0.23.1680.977@0.23.1680.977" timestamp="1589288357065" />
+    <state x="496" y="23" width="791" height="975" key="recent.locations.popup/0.23.1680.977/-144.-1057.1920.1057@0.23.1680.977" timestamp="1588109866058" />
+    <state x="448" y="164" key="scopes" timestamp="1587080515367">
+      <screen x="0" y="23" width="1680" height="977" />
+    </state>
+    <state x="448" y="164" key="scopes/0.23.1680.977/-144.-1057.1920.1057@0.23.1680.977" timestamp="1587080515367" />
+    <state x="483" y="270" width="670" height="676" key="search.everywhere.popup" timestamp="1587678768721">
+      <screen x="0" y="23" width="1680" height="977" />
+    </state>
+    <state x="483" y="270" width="670" height="676" key="search.everywhere.popup/0.23.1680.977/-144.-1057.1920.1057@0.23.1680.977" timestamp="1587678768721" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -174,6 +276,76 @@
           <url>file://$PROJECT_DIR$/../../PackThemAll/makedir_folders/scripts/graph_dist_hist.py</url>
           <line>266</line>
           <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../graphs/rmsf_next.py</url>
+          <line>60</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../graphs/xx.py</url>
+          <line>31</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../../minnie/scripts/time_freq.py</url>
+          <line>65</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../../minniex/core/filtering.py</url>
+          <line>27</line>
+          <option name="timeStamp" value="17" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../../minnie/scripts/common.py</url>
+          <line>166</line>
+          <option name="timeStamp" value="18" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../../minnie/scripts/cx_spp_filter.py</url>
+          <line>177</line>
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../../minniex/core/filtering.py</url>
+          <line>43</line>
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../../minniex/core/filtering.py</url>
+          <line>245</line>
+          <option name="timeStamp" value="25" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../../minniex/core/filtering.py</url>
+          <line>266</line>
+          <option name="timeStamp" value="26" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../../minniex/core/filtering.py</url>
+          <line>299</line>
+          <option name="timeStamp" value="27" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../../minniex/core/filtering.py</url>
+          <line>329</line>
+          <option name="timeStamp" value="28" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/core/curvature.py</url>
+          <line>144</line>
+          <option name="timeStamp" value="30" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/core/curvature.py</url>
+          <line>158</line>
+          <option name="timeStamp" value="31" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../../LLITM/graphs/haddock_kd.py</url>
+          <line>67</line>
+          <option name="timeStamp" value="32" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

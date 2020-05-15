@@ -3,17 +3,18 @@ import sys
 import click
 import glob
 import locale
-path_test="/Users/denizdogan/Library/Mobile Documents/com~apple~CloudDocs/Github/kaleLab/nucleosome"
-sys.path.append(path_test)
 import core
 from core import analysis
 from core import curvature
 from core import graphxs
+from core import correlation
+from core.correlation import *
 from core.analysis import *
 from core.curvature import *
 from core.graphxs import *
-
-pool= Pool(pathos.multiprocessing.cpu_count()-2)
+from pathos.multiprocessing import ProcessingPool as Pool
+#pool= Pool(pathos.multiprocessing.cpu_count()-2)
+pool= Pool(2)
 locale.setlocale(locale.LC_ALL,'en_US.utf-8')
 
 
@@ -25,24 +26,74 @@ def cli():
 
 
 @cli.command()
-@click.option('--csvfile','-c', help="Give contact numbers as *.csv", required=True)
+@click.option('--n_frames','-nf',default=5000, help="number of frames")
+@click.option('--n_bases','-nb',default=145, help="number of base pairs")
+@click.option('--n_clusters','-nc', default=6, help="Number of clusters", show_default=True)
+@click.option('--dna_chain_1','-dc1',  help="DNA chain 1", default="I", show_default=True)
+@click.option('--dna_chain_2','-dc2',  help="DNA chain 2", default="J", show_default=True)
+@click.option('--histone_chains','-hc', help="Histone chains", default=["A", "B", "C", "D", "E", "F", "G", "H"], show_default=True)
+def correlation(n_frames,n_bases,n_clusters,dna_chain_1,dna_chain_2,histone_chains):
+    """
+    To find RMSF per residue
+
+    usage: nucleus correlation --n_bases 145 --n_frames 2
+    """
+    correlated(n_frames,n_bases,n_clusters,dna_chain_1,dna_chain_2,histone_chains)
+
+    #analysis.rmsfperresid(pdb, selection1, first, last, step)
+
+
+
+@cli.command()
+@click.option('--csvfile','-c', help="Give contact numbers as *.csv")
 @click.option('--selection1','-s1', help="Specify a group of atoms", default="all", show_default=True)
 @click.option('--selection2','-s2', required=True, help="Specify a group of atoms")
+@click.option('--data','-d', type=click.Choice(["contact", "rmsf","radcurv","bendene","sasa","contactperres"]), default="rmsf", show_default=True, help="to merge files")
+#@click.option('--graph_type','-gt', type=click.Choice(["heatmaps", "barplot"]), default="barplot", show_default=True, help="to merge files")
+@click.option('--round','-r', type=click.Choice(["round_1", "round_2", "round_3"]), default="round_1", show_default=True, help="to merge files")
+@click.option('--pathb','-rpb')
+@click.option('--title','-t', type=click.Choice(["601", "Alpha Satellite Sequence", "601L"]), default="601", show_default=True, help="to merge files")
+@click.option('--system_type','-st', type=click.Choice(["system", "protein", "dna"]), default="protein", show_default=True, help="to merge files")
+@click.option('--graph_type','-gt', type=click.Choice(["heatmap", "heatmap_barplot", "barplot","multiple_heatmaps"]), default="heatmap", show_default=True, help="to draw graphs")
 #@click.option('--srad','-d', help="Solvent radius", default=1.4, show_default=True)
 #@click.option('--bp','-b', help="Boolean (use when you calculate sasa for base pairs)", default=False, show_default=True)
-def graphs(csvfile,selection1,selection2):
+def graphs(csvfile,selection1,selection2,round, title, system_type,data,graph_type,pathb):
     """
     To find sasa per time frame
 
     usage:
-    # for every residues in a chain\n
-    nucleus sasa -p npt.pdb -s1 "all" -s2 "chain A"  # --bp False
 
-    #for DNA base pairs \n
-    nucleus graphs -c 06_contact_merged/chainA_to_chainE/chainA_to_chainE.csv -s1 "chain A" -s2 "chain E"
+    #heatmap - contact
+    nucleus graphs -c 06_contact_merged/chainA_to_chainE/chainA_to_chainE.csv -s1 "chain A" -s2 "chain E" -d "contact"
+    nucleus graphs -c 06_contact_merged/chainA_to_chainE/chainA_to_chainE.csv -s1 "chain A" -s2 "chain E" -d "contact" -gt "heatmap_barplot"
+    nucleus graphs -c 08_nuc_rc_sm_merged/nuc_rc_sm5.csv -s1 "chain A" -s2 "chain E" -d "radcurv"
+    nucleus graphs -c 04_sasa_merged/all_to_chainI/all_to_chainI_notbp.csv -s1 "all" -s2 "chain I" -d "sasa"
+
+    nucleus graphs --pathb round_1 -s1 "chain A" -s2 "chain E" -d "contact" -gt "heatx"
+
     """
-    graphxs.contact.heatmaps(csvfile,selection1,selection2)
-    #analysis.sasa(pdb, selection1, selection2, srad, bp)
+    if data == "contact":
+        if graph_type == "heatmap":
+            graphxs.contact.heatmaps(csvfile,selection1,selection2)
+        elif graph_type == "heatmap_barplot":
+            graphxs.contact.heatmap_barplot(csvfile, selection1, selection2)
+        elif graph_type == "multiple_heatmaps":
+            graphxs.contact.multiple_heatmaps(pathb, selection1, selection2)
+
+    elif data == "contactperres":
+        if graph_type == "heatmap":
+            graphxs.contactperres.heatmaps(csvfile,selection1,selection2)
+        elif graph_type == "multiple_heatmaps":
+            graphxs.contactperres.multiple_heatmaps(pathb, selection1, selection2)
+    elif data == "rmsf":
+        graphxs.rmsf.barplot(round, title, system_type)
+    elif data == "radcurv":
+        graphxs.nuc_rc_sm.heatmaps_rc_sm(csvfile)
+    elif data == "bendene":
+        graphxs.nuc_rc_sm.heatmaps_nuc_e(csvfile)
+    elif data == "sasa":
+        graphxs.sasa.sasa_heatmaps(csvfile,selection1,selection2)
+
 
 
 
@@ -59,6 +110,8 @@ def rmsfperresid(pdb,selection1,first,last,step):
     usage: nucleus rmsfperresid -p npt.pdb -s1 "chain A" -f 1 -l -1 -s 1
     """
     analysis.rmsfperresid(pdb, selection1, first, last, step)
+
+
 
 
 
@@ -100,13 +153,31 @@ def sasa(ppdbs,selection1,selection2,srad,bp,onlymerge):
 @click.option('--selection1','-s1', default="chain I", help="ChainID in DNA",show_default=True)
 @click.option('--selection2','-s2', default="chain J", help="ChainID in DNA",show_default=True)
 @click.option('--sec','-sc', default="chain A B E F",help="Histone chains",show_default=True)
-def comdist(pdb,selection1,selection2,sec):
+@click.option('--tailorperres','-tp', type=click.Choice(["tail", "perres","test"]),
+              default="tail", show_default=True, help="to merge files")
+def comdist(pdb,selection1,selection2,sec,tailorperres):
     """
     To find distance to strands
 
-    usage: nucleus comdist -p npt.pdb -s1 "chain I" -s2 "chain J" -sc "chain A B E F"
+    usage:
+        nucleus comdist -p 01_organize/npt_merged.pdb -s1 "chain I" -s2 "chain J" -sc "chain A B E F" -tp "tail"
+        nucleus comdist -p 02_pdbs/ -s1 "chain I" -s2 "chain J" -sc "chain A B C D E F G H" -tp "perres"
+
     """
-    analysis.com_dist(pdb, selection1, selection2, sec)
+    if tailorperres == "tail":
+        analysis.comdist.com_dist_tail(pdb, selection1, selection2, sec)
+
+    elif tailorperres == "perres":
+        pdb_list = glob.glob(pdb + "*pdb")
+        pool.map(analysis.comdist.com_dist_perres, pdb_list,
+                 len(pdb_list) * [str(selection1)], len(pdb_list) * [str(selection2)],
+                 len(pdb_list) * [sec])
+        pool.close()
+        analysis.comdist.combine_com_dist_perres()
+    else:
+        analysis.comdist.com_dist_perres(pdb, selection1, selection2, sec)
+        analysis.comdist.combine_com_dist_perres()
+
 
 
 
@@ -175,19 +246,31 @@ def curvanalysis(ppdbs,chain1,chain2,merge,onlymerge):
 @click.option('--selection1','-s1', required=True, help="Specify a group of atoms as stated in VMD")
 @click.option('--selection2','-s2', required=True, help="Specify a group of atoms as stated in VMD")
 @click.option('--cutoff','-c', help="Specify a cutoff value", default=5.0, show_default=True)
-def contact(ppdbs,selection1,selection2,cutoff):
+@click.option('--perres','-ps', help="xx", is_flag=True)
+def contact(ppdbs,selection1,selection2,cutoff,perres):
     """
     To find contacts between two selections, default cutoff value is 5 Angstrom
 
     usage: nucleus contact -p 02_pdbs/ -s1 "chain A" -s2 "nucleic"
-    """
-    pdb_list = glob.glob(ppdbs + "*pdb")
-    pool.map(analysis.contact.contact, pdb_list,
-             len(pdb_list) * [str(selection1)], len(pdb_list) * [str(selection2)], len(pdb_list) * [str(cutoff)])
-    pool.close()
-    pool.terminate()
 
-    analysis.contact.combine_contact(selection1,selection2)
+    usage2:  nucleus contact -p 02_pdbs/ -s1 "chain A" -s2 "chain E" --perres
+    """
+    if not perres:
+        pdb_list = glob.glob(ppdbs + "*pdb")
+        pool.map(analysis.contact.contact, pdb_list,
+                 len(pdb_list) * [str(selection1)], len(pdb_list) * [str(selection2)], len(pdb_list) * [str(cutoff)])
+        pool.close()
+        pool.terminate()
+
+        analysis.contact.combine_contact(selection1,selection2)
+    elif  perres:
+        pdb_list = glob.glob(ppdbs + "*pdb")
+        pool.map(analysis.contact.contactperres, pdb_list,
+                 len(pdb_list) * [str(selection1)], len(pdb_list) * [str(selection2)], len(pdb_list) * [str(cutoff)])
+        pool.close()
+        pool.terminate()
+
+        analysis.contact.combine_contact_perres(selection1,selection2)
 
 
 if __name__ == '__main__':

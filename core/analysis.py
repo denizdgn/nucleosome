@@ -1,6 +1,5 @@
 import os
 import pandas as pd
-from pathos.multiprocessing import ProcessingPool as Pool
 import vmd
 import sys
 from vmd import *
@@ -10,13 +9,32 @@ import signal
 import pathos
 import glob
 import shutil
-pool= Pool(pathos.multiprocessing.cpu_count()-2)
+import itertools
+import io
 
 
 logging.basicConfig(stream=sys.stdout,
                     level=logging.INFO,
                     format='[%(asctime)s] %(message)s',
                     datefmt='%Y/%m/%d %H:%M:%S')
+
+def paste(x: 'donor_resnm', y: 'donor_resid', a=None, b=None,sep="") :
+    """
+
+    :param x: donor_resnm
+    :param y: donor_resid
+    :param a: acceptor_resnm
+    :param b: acceptor_resid
+    :return: pasted variables as string
+    Ex: paste("a","b") // out: 'ab'
+    """
+    if a != None :
+        return str (x) + str (y) + str(sep) + str (a) + str (b)
+    else :
+        return str (x)+ str(sep) + str (y)
+
+
+
 
 
 class contact():
@@ -36,6 +54,7 @@ class contact():
         if not os.path.exists(pathx + f'/06_contact_merged/{folder}'):
             os.makedirs(pathx + f'/06_contact_merged/{folder}', exist_ok=True)
         pathx_towrite = pathx + f'/06_contact_merged/{folder}'
+
         df3 = pd.DataFrame()
         logging.info(f'Merging files ...')
         #get all files in a folder
@@ -43,10 +62,67 @@ class contact():
         for time in range(len(files_csv)):
             df = pd.read_csv(f'{pathx_toreadz}/{sel1}_to_{sel2}_t{time}.csv')
             df3[df.columns[1]] = df.iloc[:,1]
-            signal.signal(signal.SIGINT, handler)
-        df3["mean"] = df3.iloc[:, 0:].mean(axis=1)
+            #signal.signal(signal.SIGINT, handler)
+        df3["mean"] = df3.iloc[:, 1:].mean(axis=1)
         df4=pd.concat([pd.DataFrame(df.iloc[:,0]),df3],axis=1)
         df4.to_csv(f'{pathx_towrite}/{folder}.csv', index=None)
+
+    def combine_contact_perres(selection1, selection2):
+        def handler(sig, frame):
+            raise KeyboardInterrupt("CTRL-C!")
+
+        signal.signal(signal.SIGINT, handler)
+
+        sel1 = selection1.replace(" ", "")
+        sel2 = selection2.replace(" ", "")
+
+        pathx = os.getcwd()
+        pathx_toreadz = pathx + f'/06_contact_perres/{sel1}_to_{sel2}'
+
+        folder = f'{sel1}_to_{sel2}'
+        logging.info(f'Running in folder: {folder} ...')
+        # pathx_toreadz = pathx_toread + f'/{folder}'
+        if not os.path.exists(pathx + f'/06_contact_perres_merged/{folder}'):
+            os.makedirs(pathx + f'/06_contact_perres_merged/{folder}', exist_ok=True)
+        pathx_towrite = pathx + f'/06_contact_perres_merged/{folder}'
+
+        df3 = pd.DataFrame()
+        logging.info(f'Merging files ...')
+        # get all files in a folder
+        files_csv = glob.glob(pathx_toreadz + f'/*perres_t*.csv')
+
+        for time in range(0, 5003):
+            try:
+                df = pd.read_csv(f'{pathx_toreadz}/{sel1}_to_{sel2}_perres_t{time}.csv')
+
+            except FileNotFoundError:
+                df = pd.DataFrame(columns=['donor_chain', 'acceptor_chain', 'donor_resnm', 'acceptor_resnm',
+                                           'donor_resid', 'acceptor_resid', 'donor_atom', 'acceptor_atom', 'donor',
+                                           'donorC', 'acceptor', 'acceptorC', 'donor_acceptor', 'specificity',
+                                           'time'])
+                df.loc[0, "time"] = time
+
+            df3 = df3.append(df)
+
+        df3.to_csv(f'{pathx_towrite}/{folder}_perres.csv', index=None)
+
+        df4 = pd.DataFrame()
+        logging.info(f'Merging files ...')
+        # get all files in a folder
+        files_csv = glob.glob(pathx_toreadz + f'/*perres_num_t*.csv')
+        for time in range(0, 5003):
+            try:
+                df2 = pd.read_csv(f'{pathx_toreadz}/{sel1}_to_{sel2}_perres_num_t{time}.csv')
+                df2.insert(0, 'time', time)
+
+            except FileNotFoundError:
+                df2 = pd.DataFrame(columns=["time"])
+                df2.loc[0, "time"] = time
+
+            df4 = df4.append(df2)
+
+        df4.to_csv(f'{pathx_towrite}/{folder}_perres_num.csv', index=None)
+
 
     def contact(pdb,selection1,selection2,cutoff):
         """
@@ -97,6 +173,114 @@ class contact():
         df_res_cont_num[f'contact_number_{time}'] = contact_number
         df_res_cont_num.to_csv(f'{pathx}/{sel1}_to_{sel2}_t{time}.csv',
                                    index=None)
+
+    def contactperres(pdb, selection1, selection2, cutoff):
+        f = open(f'{pdb}', "r")
+        x = f.read()
+        colnames = ["type", "atom_num", "atom_name", "idk", "res_name", "chainID", "res_num", "idk_code", "X", "Y", "Z",
+                    "occupancy",
+                    "temp_fac", "segid", "element_sym", "charge"]
+        widths = [6, 5, 5, 1, 3, 2, 4, 1, 11, 8, 8, 6, 6, 10, 2, 2]
+        df = pd.read_fwf(io.StringIO(x), header=None, widths=widths, names=colnames)
+        df_filt_1 = df[df.type == "ATOM"]
+        df_filt_2 = df[df.type == "HETATM"]
+        df_filt = df_filt_1.append(df_filt_2)
+        df_filt.drop(["occupancy", "temp_fac", "segid", "element_sym", "charge"], axis=1, inplace=True)
+        df_filt = df_filt.fillna('')
+        df_filt.atom_num = df_filt.atom_num.astype(int)
+        time = str(pdb.split("md_")[1].split(".pd")[0])
+
+        mol = vmd.molecule.load('pdb', f'{pdb}')
+
+        sel1 = selection1.replace(" ", "")
+        sel2 = selection2.replace(" ", "")
+
+        path = os.getcwd()
+        os.chdir(path)
+        if not os.path.exists(f'06_contact_perres/{sel1}_to_{sel2}'):
+            os.makedirs(f'06_contact_perres/{sel1}_to_{sel2}', exist_ok=True)
+        pathx = path + f'/06_contact_perres/{sel1}_to_{sel2}'
+        logging.info(f'Finding contacts from {sel1} to {sel2} ...')
+
+        select1 = atomsel(f'{selection1}', frame=1)
+        resids_select1 = list(OrderedDict.fromkeys(select1.resid).keys())
+
+        column_names = ['donor_chain', 'acceptor_chain', 'donor_resnm', 'acceptor_resnm', 'donor_resid',
+                        'acceptor_resid', 'donor_atom', 'acceptor_atom']
+        dfx = pd.DataFrame(columns=column_names)
+        for resid1 in resids_select1:
+            reside_atoms = atomsel(f'{selection1} and resid \"{resid1}\" and noh')
+            reside_atoms.update()
+            dna_resid = atomsel(f'{selection2} and noh')
+            dna_resid.update()
+            a = reside_atoms.contacts(selection=dna_resid, cutoff=float(cutoff))
+
+            for i in range(len(a[0])):
+                dict_l = {"donor_chain": df_filt.iloc[a[0][i], :].chainID,
+                          "acceptor_chain": df_filt.iloc[a[1][i], :].chainID,
+                          "donor_resnm": df_filt.iloc[a[0][i], :].res_name,
+                          "acceptor_resnm": df_filt.iloc[a[1][i], :].res_name,
+                          "donor_resid": df_filt.iloc[a[0][i], :].res_num,
+                          "acceptor_resid": df_filt.iloc[a[1][i], :].res_num,
+                          "donor_atom": df_filt.iloc[a[0][i], :].atom_name,
+                          "acceptor_atom": df_filt.iloc[a[1][i], :].atom_name
+                          }
+
+                dfx = dfx.append(pd.DataFrame([dict_l]))
+                del dict_l
+            del a
+
+        df_table = dfx
+        df_table.donor_resid = df_table.donor_resid.astype(int)
+        df_table.acceptor_resid = df_table.acceptor_resid.astype(int)
+
+
+
+        donor_list=df_table.apply(lambda x: x['donor_resnm'] + str(x['donor_resid']), axis=1)
+        df_table.loc[:, 'donor'] = donor_list
+
+        donorC_list=df_table.apply(lambda x,sep="_": x['donor'] +"_"+ str(x['donor_chain']), axis=1)
+        df_table.loc[:, 'donorC'] = donorC_list
+
+
+
+        acceptor_list=df_table.apply(lambda x: x['acceptor_resnm'] + str(x['acceptor_resid']), axis=1)
+        df_table.loc[:, 'acceptor'] = acceptor_list
+
+        acceptorC_list=df_table.apply(lambda x,sep="_": x['acceptor'] +"_"+ str(x['acceptor_chain']), axis=1)
+        df_table.loc[:, 'acceptorC'] = acceptorC_list
+
+
+        donor_acceptor_list=df_table.apply(lambda x,sep=":": x['donorC'] +sep+ str(x['acceptorC']), axis=1)
+        df_table.loc[:, 'donor_acceptor'] = donor_acceptor_list
+
+
+        df_table.index = range(len(df_table))
+
+        # ADD SPECIFICITY
+        non_spp_atoms = ["O2P", "O1P", "N", "O", "OC1", "OC2", "O4'", "O5'", "O3'", "H", "HA",
+                         "P", "C5'", "C4'", "C3'", "C2'", "C1'","CA","C","CB"]
+        x = []
+        for i in range(len(df_table)):
+            if (df_table["acceptor_atom"][i] or df_table["donor_atom"][i]) in non_spp_atoms:
+                x.append("non-specific")
+            else:
+                x.append("specific")
+        df_table.loc[:, 'specificity'] = x
+        df_table.loc[:, 'time'] = time
+
+        df_table.to_csv(f'{pathx}/{sel1}_to_{sel2}_perres_t{time}.csv', index=None)
+
+        xx = list(OrderedDict.fromkeys(df_table.donor_acceptor).keys())
+
+        org = OrderedDict()
+        for i, key in enumerate(xx):
+            org[key] = sum(df_table.donor_acceptor == xx[i])
+
+
+        org_df = pd.DataFrame([org])
+        org_df.to_csv(f'{pathx}/{sel1}_to_{sel2}_perres_num_t{time}.csv', index=None)
+
 
 def rmsfperresid(pdb,selection1,first,last,step):
     """
@@ -272,60 +456,191 @@ class sasa():
 
 
 
+class comdist():
+    def com_dist_tail(pdb,selection1,selection2,sec):
+        def handler(sig, frame):
+            raise KeyboardInterrupt("CTRL-C!")
 
-def com_dist(pdb,selection1,selection2,sec):
-    def handler(sig, frame):
-        raise KeyboardInterrupt("CTRL-C!")
+        def conv(x):
+            return str(f'\"{str(x)}\"')
 
-    def conv(x):
-        return str(f'\"{str(x)}\"')
+        path = os.getcwd()
+        os.chdir(path)
+        if not os.path.exists("05_distance"):
+            os.makedirs("05_distance")
+        pathx = path + "/05_distance"
+        logging.info(f'Starting..')
 
-    path = os.getcwd()
-    os.chdir(path)
-    if not os.path.exists("05_distance"):
-        os.makedirs("05_distance")
-    pathx = path + "/05_distance"
-    logging.info(f'Starting..')
+        mol=vmd.molecule.load('pdb',pdb)
+        num_frame=vmd.molecule.numframes(mol)
 
-    mol=vmd.molecule.load('pdb',pdb)
-    num_frame=vmd.molecule.numframes(mol)
+        select1 = atomsel(f'{selection1}', frame=1)
+        resids_select1 = list(OrderedDict.fromkeys(select1.resid).keys())
 
-    select1 = atomsel(f'{selection1}', frame=1)
-    resids_select1 = list(OrderedDict.fromkeys(select1.resid).keys())
-
-    select2 = atomsel(f'{selection2}', frame=1)
-    resids_select2 = list(OrderedDict.fromkeys(select2.resid).keys())
-
-
-    toappend=[[0,0,0]] # get first frame
-    #def multiple(i,selection1,selection2,)
-    for i in range(num_frame):
-        signal.signal(signal.SIGINT, handler)
-        logging.info(f'Running on frame # {i + 1}')
-
-        #find a solution for minus signed nucleotide numbers
-        strand2 = atomsel(f'({selection1} and resid {" ".join(map(conv,resids_select1[-6:]))}) or ({selection2} and '
-                          f'resid {" ".join(map(conv,resids_select2[:6]))}) ',frame=i+1)
-        strand1 = atomsel(f'({selection2} and resid {" ".join(map(conv,resids_select2[-6:]))}) or ({selection1} and '
-                          f'resid {" ".join(map(conv,resids_select1[:6]))}) ',frame=i+1)
-
-        strand1_c=strand1.center() #dna
-        strand2_c=strand2.center() #dna
+        select2 = atomsel(f'{selection2}', frame=1)
+        resids_select2 = list(OrderedDict.fromkeys(select2.resid).keys())
 
 
-        histone = atomsel(f'({sec}) and helix and alpha',frame=i+1)
-        histone_c = histone.center()
+        toappend=[[0,0,0]] # get first frame
 
-        strand1__histone=((histone_c[0] - strand1_c[0])**2 +  (histone_c[1] - strand1_c[1])**2 + \
-                          (histone_c[2] - strand1_c[2])**2)**(1/2)
-        strand2__histone=((histone_c[0] - strand2_c[0])**2 +  (histone_c[1] - strand2_c[1])**2 + \
-                          (histone_c[2] - strand2_c[2])**2)**(1/2)
-        toappend.append([i+1, strand1__histone, strand2__histone])  # append to others
+        for i in range(num_frame):
+            #signal.signal(signal.SIGINT, handler)
+            logging.info(f'Running on frame # {i + 1}')
 
-    df_dist=pd.DataFrame(toappend,columns=["time","strand1","strand2"])
-    df_dist = df_dist.iloc[1:]
-    logging.info(f'Writing ..')
-    df_dist.to_csv(pathx+"/distance.csv",index=None)
+            #find a solution for minus signed nucleotide numbers
+            strand2 = atomsel(f'({selection1} and resid {" ".join(map(conv,resids_select1[-6:]))}) or ({selection2} and '
+                              f'resid {" ".join(map(conv,resids_select2[:6]))}) ',frame=i+1)
+            strand1 = atomsel(f'({selection2} and resid {" ".join(map(conv,resids_select2[-6:]))}) or ({selection1} and '
+                              f'resid {" ".join(map(conv,resids_select1[:6]))}) ',frame=i+1)
+
+            strand1_c=strand1.center() #dna
+            strand2_c=strand2.center() #dna
+
+
+            histone = atomsel(f'({sec}) and helix and alpha',frame=i+1)
+            histone_c = histone.center()
+
+            strand1__histone=((histone_c[0] - strand1_c[0])**2 +  (histone_c[1] - strand1_c[1])**2 + \
+                              (histone_c[2] - strand1_c[2])**2)**(1/2)
+            strand2__histone=((histone_c[0] - strand2_c[0])**2 +  (histone_c[1] - strand2_c[1])**2 + \
+                              (histone_c[2] - strand2_c[2])**2)**(1/2)
+            toappend.append([i+1, strand1__histone, strand2__histone])  # append to others
+
+        df_dist=pd.DataFrame(toappend,columns=["time","strand1","strand2"])
+        df_dist = df_dist.iloc[1:]
+        logging.info(f'Writing ..')
+        df_dist.to_csv(pathx+"/distance.csv",index=None)
+
+    def combine_com_dist_perres():
+
+        pathx = os.getcwd()
+        pathx_toreadz =  f'{pathx}/05_distance_perres/'
+
+        if not os.path.exists(f'{pathx}/05_distance_perres_merged'):
+            os.makedirs(f'{pathx}/05_distance_perres_merged', exist_ok=True)
+        pathx_towrite = f'{pathx}/05_distance_perres_merged'
+
+        df3 = pd.DataFrame()
+        logging.info(f'Merging files ...')
+        # get all files in a folder
+        file_list = glob.glob(f'{pathx_toreadz}/*.csv')
+
+        for file in file_list:
+            df = pd.read_csv(f'{file}')
+            df3 = df3.append(df)
+
+        df3.to_csv(f'{pathx_towrite}/distance_perres.csv', index=None)
+
+
+    def com_dist_perres(pdb,selection1,selection2,sec):
+        def handler(sig, frame):
+            raise KeyboardInterrupt("CTRL-C!")
+
+        def conv(x):
+            return str(f'\"{str(x)}\"')
+
+        path = os.getcwd()
+        os.chdir(path)
+        if not os.path.exists("05_distance_perres"):
+            os.makedirs("05_distance_perres", exist_ok=True)
+        pathx = path + "/05_distance_perres"
+        logging.info(f'Starting..')
+
+        mol=vmd.molecule.load('pdb',pdb)
+        time = pdb.split("md_")[1].split(".pdb")[0]
+        sel1 = selection1.split(" ")[1]
+        sel2 = selection2.split(" ")[1]
+
+        select1 = atomsel(f'{selection1}')
+        resids_select1 = list(OrderedDict.fromkeys(select1.resid).keys())
+
+        select2 = atomsel(f'{selection2}')
+        resids_select2 = list(OrderedDict.fromkeys(select2.resid).keys())
+
+        logging.info(f'Running on #{time} pdb ..)')
+
+
+        toappend=[[0,0,0,0,0]] # get first frame
+
+        for i in range(len(resids_select2)):
+            #signal.signal(signal.SIGINT, handler)
+
+            strand2 = atomsel(f'({selection1} and resid {conv(resids_select1[-i-1])}) or ({selection2} and resid {conv(resids_select2[i])}) ')
+            strand1 = atomsel(f'({selection2} and resid {conv(resids_select2[-i-1])}) or ({selection1} and resid {conv(resids_select1[i])})')
+
+
+            strand1_c=strand1.center() #dna
+            strand2_c=strand2.center() #dna
+
+
+            histone = atomsel(f'({sec}) and helix and alpha')
+            histone_c = histone.center()
+
+            strand1__histone=((histone_c[0] - strand1_c[0])**2 +  (histone_c[1] - strand1_c[1])**2 + \
+                              (histone_c[2] - strand1_c[2])**2)**(1/2)
+            strand2__histone=((histone_c[0] - strand2_c[0])**2 +  (histone_c[1] - strand2_c[1])**2 + \
+                              (histone_c[2] - strand2_c[2])**2)**(1/2)
+            toappend.append([time,f'{resids_select1[-i-1]}_{resids_select2[i]}',f'{resids_select1[i]}_{resids_select2[-i-1]}', strand1__histone, strand2__histone])  # append to others
+
+        df_dist=pd.DataFrame(toappend,columns=["time",f'strand1_chain{sel1}{sel2}',f'strand2_chain{sel2}{sel1}',"strand1_dist","strand2_dist"])
+        df_dist = df_dist.iloc[1:]
+        logging.info(f'Writing to {pathx} ..')
+        df_dist.to_csv(f'{pathx}/distance_t{time}.csv',index=None)
+
+    def com_dist_perres_merged(pdb,selection1,selection2,sec):
+        def handler(sig, frame):
+            raise KeyboardInterrupt("CTRL-C!")
+
+        def conv(x):
+            return str(f'\"{str(x)}\"')
+
+        path = os.getcwd()
+        os.chdir(path)
+        if not os.path.exists("05_distance_perres"):
+            os.makedirs("05_distance_perres", exist_ok=True)
+        pathx = path + "/05_distance_perres"
+        logging.info(f'Starting..')
+
+        mol=vmd.molecule.load('pdb',pdb)
+        time = pdb.split("md_")[1].split(".pdb")[0]
+        sel1 = selection1.split(" ")[1]
+        sel2 = selection2.split(" ")[1]
+
+        select1 = atomsel(f'{selection1}')
+        resids_select1 = list(OrderedDict.fromkeys(select1.resid).keys())
+
+        select2 = atomsel(f'{selection2}')
+        resids_select2 = list(OrderedDict.fromkeys(select2.resid).keys())
+
+        logging.info(f'Running on #{time} pdb ..)')
+
+
+        toappend=[[0,0,0,0,0]] # get first frame
+
+        for i in range(len(resids_select2)):
+            #signal.signal(signal.SIGINT, handler)
+
+            strand2 = atomsel(f'({selection1} and resid {conv(resids_select1[-i-1])}) or ({selection2} and resid {conv(resids_select2[i])}) ',frame=i+1)
+            strand1 = atomsel(f'({selection2} and resid {conv(resids_select2[-i-1])}) or ({selection1} and resid {conv(resids_select1[i])})',frame=i+1)
+
+
+            strand1_c=strand1.center() #dna
+            strand2_c=strand2.center() #dna
+
+
+            histone = atomsel(f'({sec}) and helix and alpha',frame=i+1)
+            histone_c = histone.center()
+
+            strand1__histone=((histone_c[0] - strand1_c[0])**2 +  (histone_c[1] - strand1_c[1])**2 + \
+                              (histone_c[2] - strand1_c[2])**2)**(1/2)
+            strand2__histone=((histone_c[0] - strand2_c[0])**2 +  (histone_c[1] - strand2_c[1])**2 + \
+                              (histone_c[2] - strand2_c[2])**2)**(1/2)
+            toappend.append([time,f'{resids_select1[-i-1]}_{resids_select2[i]}',f'{resids_select1[i]}_{resids_select2[-i-1]}', strand1__histone, strand2__histone])  # append to others
+
+        df_dist=pd.DataFrame(toappend,columns=["time",f'strand1_chain{sel1}{sel2}',f'strand2_chain{sel2}{sel1}',"strand1_dist","strand2_dist"])
+        df_dist = df_dist.iloc[1:]
+        logging.info(f'Writing to {pathx} ..')
+        df_dist.to_csv(f'{pathx}/distance_t{time}.csv',index=None)
 
 
 
@@ -397,6 +712,10 @@ def clean():
     if os.path.exists('04_sasa') and os.path.isdir('04_sasa'):
         logging.info(f'Removing folder - 04_sasa')
         shutil.rmtree('04_sasa')
+
+    if os.path.exists('06_contact_perres') and os.path.isdir('04_sasa'):
+        logging.info(f'Removing folder - 06_contact_perres')
+        shutil.rmtree('06_contact_perres')
 
 
 

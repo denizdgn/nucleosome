@@ -6,7 +6,16 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="nucleus" />
     <orderEntry type="module" module-name="pdbs" />
-    <orderEntry type="module" module-name="ToModifyPdb" />
     <orderEntry type="module" module-name="slurm" />
+    <orderEntry type="module" module-name="wulf" />
+    <orderEntry type="module" module-name="graphs" />
+    <orderEntry type="module" module-name="minnie" />
+    <orderEntry type="module" module-name="LLITM" />
+    <orderEntry type="module" module-name="CSBscripts" />
+    <orderEntry type="module" module-name="minniex" />
+    <orderEntry type="module" module-name="LLITM" />
+    <orderEntry type="module" module-name="met" />
+    <orderEntry type="module" module-name="learn" />
+    <orderEntry type="module" module-name="minniex" />
   </component>
 </module>
