@@ -59,18 +59,10 @@ def correlation(n_frames,n_bases,n_clusters,dna_chain_1,dna_chain_2,histone_chai
 #@click.option('--bp','-b', help="Boolean (use when you calculate sasa for base pairs)", default=False, show_default=True)
 def graphs(csvfile,selection1,selection2,round, title, system_type,data,graph_type,pathb):
     """
-    To find sasa per time frame
+    To draw graphs
 
     usage:
-
-    #heatmap - contact
-    nucleus graphs -c 06_contact_merged/chainA_to_chainE/chainA_to_chainE.csv -s1 "chain A" -s2 "chain E" -d "contact"
-    nucleus graphs -c 06_contact_merged/chainA_to_chainE/chainA_to_chainE.csv -s1 "chain A" -s2 "chain E" -d "contact" -gt "heatmap_barplot"
-    nucleus graphs -c 08_nuc_rc_sm_merged/nuc_rc_sm5.csv -s1 "chain A" -s2 "chain E" -d "radcurv"
-    nucleus graphs -c 04_sasa_merged/all_to_chainI/all_to_chainI_notbp.csv -s1 "all" -s2 "chain I" -d "sasa"
-
-    nucleus graphs --pathb round_1 -s1 "chain A" -s2 "chain E" -d "contact" -gt "heatx"
-
+    nucleus graphs -c 06_contact_merged/chainA_to_chainE/chainA_to_chainE.csv -s1 "chain A" -s2 "chain E"
     """
     if data == "contact":
         if graph_type == "heatmap":
@@ -275,12 +267,3 @@ def contact(ppdbs,selection1,selection2,cutoff,perres):
 
 if __name__ == '__main__':
     cli(obj={})
-
-
-
-
-
-
-
-
-
